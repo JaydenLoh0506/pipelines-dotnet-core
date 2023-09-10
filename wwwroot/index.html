@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Online book store - front page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        
+        .photo {
+            width: 100%;
+            height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+                              url("background.jpg"); /* Update the image path */
+            background-size: cover;
+            background-position: center;
+        }
+        .navbar {
+            width: 85%;
+            margin: auto;
+            padding: 35px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            width: 120px;
+            cursor: pointer;
+        }
+        .navbar ul li {
+            list-style: none;
+            display: inline-block;
+            margin: 0 20px;
+            position: relative;
+        }
+        .navbar ul li a {
+            text-decoration: none;
+            color: #fff;
+            text-transform: uppercase;
+        }
+        .navbar ul li::after {
+            content: '';
+            height: 3px;
+            width: 0%;
+            background: #009688;
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            transition: 0.5s;
+        }
+        .navbar ul li:hover::after {
+            width: 100%;
+        }
+        .content {
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+            color: #fff;
+        }
+
+        .content h1 {
+            font-size: 70px;
+            margin-top: 80px;
+        }
+
+        .content p {
+            margin: 20px auto;
+            font-weight: 100;
+            line-height: 25px;
+        }
+        button {
+            width: 200px;
+            padding: 15px 0;
+            text-align: center;
+            margin: 20px 10px;
+            border-radius: 25px;
+            font-weight: bold;
+            border: 2px solid #009688;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        span {
+            background: #009688;
+            height: 100%;
+            width: 0;
+            border-radius: 25px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            z-index: -1;
+            transition: 0.5s;
+        }
+
+        button:hover span {
+            width: 100%;
+        }
+        button:hover {
+            border: none;
+        }
+        .advertisement {
+            text-align: center;
+            position: relative;
+        }
+        .ad-images-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin: 0 auto;
+            height: 250px; /* Set the height for the images container */
+            width: 700px;
+        }
+        .ad-image {
+            display: none;
+            width: 500px;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .ad-image.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .backgroundMusic {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.7); /* Background color with some transparency */
+            border: 1px solid #009688;
+            border-radius: 5px;
+            z-index: 2; /* Place it on top of the background image */
+          }
+        .photo {
+            position: relative;
+          }
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <img src="imageclick.jpg" alt="Click Image" id="imageclick" style="position: fixed; bottom: 10px; left: 10px; width: 50px; height: 50px; cursor: pointer; z-index: 1;" onclick="toggleImage()">
+
+
+
+
+
+    <div class="photo">
+        <div class="navbar">
+             <img src="logo.png" alt="Logo" class="logo"> <!-- Update the logo image path -->
+             <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">a</a></li>
+                <li><a href="#">b</a></li>
+                <li><a href="#">c</a></li>
+                <li><a href="#">d</a></li>
+             </ul>
+        </div>
+
+        <div class="content">
+            <h1>Welcome to our Online book store</h1>
+            <p>Discover Limitless Worlds Within the Pages – Explore Our Collection of Enchanting Ebooks!</p>
+            <div>
+                <button type="button"><span></span>Login</button>
+                <button type="button"><span></span>Home</button>
+            </div>
+            <div class="advertisement">
+                <div class="ad-images-container" id="adImagesContainer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio class="backgroundMusic" loop autoplay controls>
+        <source src="background-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+ 
+    
+    <script>
+        const adImagesContainer = document.getElementById('adImagesContainer');
+
+        let currentBannerIndex = 0;
+        const numBanners = 4; // Replace with the actual number of banners
+
+        let bannerPaths = [];
+        for (let i = 1; i <= numBanners; i++) {
+            bannerPaths.push(`banner${i}.jpg`);
+        }
+
+        function updateBanner() {
+            adImagesContainer.innerHTML = '';
+
+            const img = document.createElement('img');
+            img.src = bannerPaths[currentBannerIndex];
+            img.alt = 'Advertisement';
+            img.classList.add('ad-image', 'active');
+
+            adImagesContainer.appendChild(img);
+        }
+
+        function changeBanner() {
+            currentBannerIndex = (currentBannerIndex + 1) % bannerPaths.length;
+            updateBanner();
+        }
+
+        // Set up initial banner
+        updateBanner();
+
+        // Set interval to change banner every 5 seconds
+        setInterval(changeBanner, 5000);
+
+        let clickCount = 0;
+
+function incrementClickCount() {
+    // Check if the 'clickcount' key exists in session storage
+    if (sessionStorage.getItem('clickcount')) {
+        // Retrieve the current click count from session storage, increment it, and store it back
+        const currentClickCount = Number(sessionStorage.getItem('clickcount')) + 1;
+        sessionStorage.setItem('clickcount', currentClickCount);
+    } else {
+        // If the 'clickcount' key doesn't exist, initialize it with 1
+        sessionStorage.setItem('clickcount', 1);
+    }
+
+    // Update the content to display the new click count
+    document.getElementById("result").innerHTML =
+        "You have clicked the image " +
+        sessionStorage.getItem('clickcount') +
+        " time(s) in this session.";
+
+    // Change the image source to imageclick2
+    document.getElementById('imageclick').src = 'imageclick2.jpg'; // Replace with the path to imageclick2
+}
+
+function toggleImage() {
+    clickCount++;
+    sessionStorage.setItem('clickcount', clickCount);
+
+    const image = document.getElementById('imageclick');
+
+    if (clickCount % 2 === 0) {
+        // Even clicks, change to imageclick
+        image.src = 'imageclick.jpg';
+    } else {
+        // Odd clicks, change to imageclick2
+        image.src = 'imageclick2.jpg';
+    }
+
+    // Update the content to display the new click count
+    document.getElementById("result").innerHTML =
+        "You have clicked the image " +
+        clickCount +
+        " time(s) in this session.";
+}
+    </script>
+</body>
+</html>
